@@ -1,0 +1,52 @@
+{
+	"dependencies": {
+		"@hono/node-server": "^1.12.0",
+		"dotenv": "^16.4.5",
+		"eventemitter3": "^5.0.1",
+		"hono": "^4.5.1",
+		"tiktok-live-connector": "^1.1.9",
+		"zod": "^3.23.8"
+	},
+	"devDependencies": {
+		"@types/node": "^20.14.11",
+		"electron-builder": "^24.13.3",
+		"tsx": "^4.16.2",
+		"electron": "^31.2.1"
+	},
+	"name": "tiktok-chat-desktop",
+	"version": "0.0.1",
+	"author": {
+		"name": "Kıraç Armağan Önal",
+		"email": "kiracarmaganonal@gmail.com"
+	},
+	"main": "src/index.js",
+	"scripts": {
+		"dev": "electron .",
+		"build:win": "electron-builder --windows portable --x64"
+	},
+	"build": {
+		"appId": "rest.armagan.tiktokchatdesktop",
+		"productName": "TikTok Chat Desktop",
+		"files": [
+			"!*",
+			"src",
+			"static",
+			"package.json",
+			"LICENSE"
+		],
+		"icon": "static/icon.png",
+		"nsis": {
+			"oneClick": true,
+			"perMachine": false,
+			"allowToChangeInstallationDirectory": false,
+			"installerIcon": "static/icon.ico",
+			"createDesktopShortcut": true,
+			"createStartMenuShortcut": true
+		},
+		"win": {
+			"target": [
+				"portable"
+			]
+		}
+	}
+}

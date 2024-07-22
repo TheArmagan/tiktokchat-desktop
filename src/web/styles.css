@@ -1,0 +1,421 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  outline: none;
+  font-family: "Poppins", sans-serif;
+}
+
+html,
+body,
+#app {
+  width: 100vw;
+  height: 100vh;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+}
+
+#app {
+  background-color: rgb(32, 32, 32);
+  border-radius: 12px;
+  --title-bar-height: 32px;
+}
+#app > .title-bar {
+  padding: 0px 16px;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.25);
+  border-radius: 12px 12px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--title-bar-height);
+  -webkit-app-region: drag;
+}
+#app > .title-bar > .title {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+#app > .title-bar > .title > .name {
+  font-size: 14px;
+  font-weight: 600;
+  color: whitesmoke;
+}
+#app > .title-bar > .title > .version {
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(245, 245, 245, 0.5);
+}
+#app > .title-bar > .controls {
+  display: flex;
+  gap: 8px;
+  color: whitesmoke;
+}
+#app > .title-bar > .controls .icon {
+  -webkit-app-region: no-drag;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+}
+#app > .title-bar > .controls .icon.selected {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+#app > .title-bar > .controls .icon:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+#app > .content {
+  display: flex;
+  height: calc(100vh - var(--title-bar-height));
+}
+#app > .content > .chats-tab {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - var(--title-bar-height));
+  --chats-list-height: 44px;
+  --chats-list-height-inner: 32px;
+  position: relative;
+}
+#app > .content > .chats-tab > .chats-list {
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--chats-list-height);
+  overflow-x: hidden;
+  position: relative;
+}
+#app > .content > .chats-tab > .chats-list .end-fade {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 64px;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75));
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  z-index: 999;
+  gap: 4px;
+  padding-right: 4px;
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+}
+#app > .content > .chats-tab > .chats-list .end-fade.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+#app > .content > .chats-tab > .chats-list .end-fade > .icons {
+  transition: opacity 0.2s ease-in-out;
+  pointer-events: all;
+  display: flex;
+  gap: 4px;
+}
+#app > .content > .chats-tab > .chats-list .end-fade > .icons .icon {
+  color: whitesmoke;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 50%;
+  padding: 4px;
+  background-color: rgba(0, 0, 0, 0.5);
+  pointer-events: all;
+  z-index: 9991;
+}
+#app > .content > .chats-tab > .chats-list .end-fade > .icons .icon:hover {
+  background-color: rgba(0, 0, 0, 0.75);
+}
+#app > .content > .chats-tab > .chats-list > .tabs-wrapper {
+  padding-left: 8px;
+  padding-right: 64px;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+  left: 0;
+  position: absolute;
+}
+#app > .content > .chats-tab > .chats-list > .tabs-wrapper::-webkit-scrollbar {
+  height: 0px;
+}
+#app > .content > .chats-tab > .chats-list > .tabs-wrapper .chat-tab {
+  -webkit-app-region: no-drag;
+  display: flex;
+  height: var(--chats-list-height-inner);
+  align-items: center;
+  gap: 4px;
+  color: whitesmoke;
+  background-color: rgba(0, 0, 0, 0.25);
+  padding: 0px 8px;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+#app > .content > .chats-tab > .chats-list > .tabs-wrapper .chat-tab.selected {
+  border: 2px solid rgba(245, 245, 245, 0.25);
+}
+#app > .content > .chats-tab > .chats-list > .tabs-wrapper .chat-tab > .name {
+  max-width: 128px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0.95;
+  font-weight: 200;
+  font-size: 12px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+#app > .content > .chats-tab > .chat-content {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - var(--title-bar-height) - var(--chats-list-height));
+  gap: 4px;
+  overflow-y: auto;
+  border-radius: 8px;
+}
+#app > .content > .chats-tab > .chat-content .chat-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  background-color: rgba(16, 16, 16, 0.25);
+  padding: 8px;
+  position: relative;
+}
+#app > .content > .chats-tab > .chat-content .chat-item > .created-at {
+  position: absolute;
+  font-size: 14px;
+  color: rgba(245, 245, 245, 0.5);
+  font-weight: 300;
+  right: 8px;
+  top: 8px;
+}
+#app > .content > .chats-tab > .chat-content .chat-item > .icons {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+#app > .content > .chats-tab > .chat-content .chat-item > .icons img.icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+}
+#app > .content > .chats-tab > .chat-content .chat-item > .icons i.icon {
+  font-size: 16px;
+  color: whitesmoke;
+  cursor: pointer;
+  padding: 4px;
+}
+#app > .content > .chats-tab > .chat-content .chat-item > .content {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+#app > .content > .chats-tab > .chat-content .chat-item > .content .content-item {
+  white-space: pre-wrap;
+  font-size: 14px;
+}
+#app > .content > .chats-tab > .auto-scroll-down {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  display: flex;
+  color: whitesmoke;
+  font-size: 32px;
+  cursor: pointer;
+  opacity: 0.5;
+}
+#app > .content > .chats-tab > .auto-scroll-down:hover {
+  opacity: 1;
+}
+#app > .content > .settings-tab {
+  display: flex;
+  padding: 8px;
+  gap: 8px;
+  flex-direction: column;
+  height: calc(100vh - var(--title-bar-height));
+  width: 100vw;
+  overflow-y: auto;
+}
+#app > .content > .settings-tab .section {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  border-left: 4px solid rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
+  gap: 8px;
+}
+#app > .content > .settings-tab .section > .info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+#app > .content > .settings-tab .section > .info > .title {
+  font-size: 16px;
+  font-weight: 600;
+  color: whitesmoke;
+}
+#app > .content > .settings-tab .section > .info > .description {
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(245, 245, 245, 0.5);
+}
+#app > .content > .settings-tab .section > .controls {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+#app > .content > .settings-tab .section > .controls > .chat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+#app > .content > .settings-tab .section > .controls > .chat-list > .list {
+  display: flex;
+  flex-direction: column;
+  background-color: #131313;
+  border: 2px solid #161616;
+  border-radius: 8px;
+  padding: 4px;
+  max-height: 128px;
+  height: 128px;
+  gap: 4px;
+  overflow-y: auto;
+}
+#app > .content > .settings-tab .section > .controls > .chat-list > .list .list-item {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  justify-content: space-between;
+  background-color: rgba(255, 255, 255, 0.01);
+}
+#app > .content > .settings-tab .section > .controls > .chat-list > .list .list-item:hover, #app > .content > .settings-tab .section > .controls > .chat-list > .list .list-item.selected {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+#app > .content > .settings-tab .section > .controls > .chat-list > .list .list-item > .name {
+  max-width: 148px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0.95;
+  font-weight: 200;
+  font-size: 14px;
+  color: whitesmoke;
+}
+#app > .content > .settings-tab .section > .controls > .chat-list > .list .list-item > .close {
+  font-size: 12px;
+  color: rgba(245, 245, 245, 0.5);
+  cursor: pointer;
+}
+#app > .content > .settings-tab .section > .controls > .chat-list > .list .list-item > .close:hover {
+  color: whitesmoke;
+}
+#app > .content > .settings-tab .section > .controls > .chat-list > .add-item {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+input[type=text],
+input[type=password],
+input[type=number],
+textarea,
+select {
+  background-color: #131313;
+  border: 2px solid #161616;
+  padding: 4px 8px;
+  border-radius: 8px;
+  color: rgba(245, 245, 245, 0.75);
+  font-size: 14px;
+}
+input[type=text]:hover, input[type=text]:focus,
+input[type=password]:hover,
+input[type=password]:focus,
+input[type=number]:hover,
+input[type=number]:focus,
+textarea:hover,
+textarea:focus,
+select:hover,
+select:focus {
+  border: 2px solid #2d2d2d;
+  color: whitesmoke;
+}
+input[type=text]:disabled, input[type=text].disabled,
+input[type=password]:disabled,
+input[type=password].disabled,
+input[type=number]:disabled,
+input[type=number].disabled,
+textarea:disabled,
+textarea.disabled,
+select:disabled,
+select.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+input[type=text].small,
+input[type=password].small,
+input[type=number].small,
+textarea.small,
+select.small {
+  padding: 2px 4px;
+  font-size: 12px;
+}
+
+option {
+  background-color: #131313;
+  color: whitesmoke;
+  font-size: 14px;
+}
+
+button {
+  padding: 4px 8px;
+  background-color: #131313;
+  border: 2px solid #161616;
+  border-radius: 8px;
+  color: rgba(245, 245, 245, 0.95);
+  cursor: pointer;
+  font-size: 14px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+button:hover {
+  background-color: #101010;
+  border: 2px solid #101010;
+  color: whitesmoke;
+}
+button:active {
+  scale: 0.95;
+}
+button:disabled, button.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+button.small {
+  padding: 2px 4px;
+  font-size: 12px;
+}
+
+template {
+  display: none;
+}

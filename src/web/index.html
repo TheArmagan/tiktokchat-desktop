@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TikTok Chat Desktop</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <template component="chats-tab">
+      <div class="chats-tab">
+        <div class="chats-list">
+          <div class="end-fade" :class="{'hidden': !showEndFade}">
+            <div class="icons">
+              <i
+                class="ri-arrow-drop-left-line icon"
+                @click="slideBackward"
+              ></i>
+              <i
+                class="ri-arrow-drop-right-line icon"
+                @click="slideForward"
+              ></i>
+            </div>
+          </div>
+          <div class="tabs-wrapper" ref="chatTabsWrapper">
+            <div
+              v-for="chat in followedChats"
+              :key="chat"
+              class="chat-tab"
+              :class="{'selected': chat === selectedChat}"
+              @click="onSelect(chat)"
+            >
+              <div class="name" :title="`@${chat}`">@{{ chat }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="chat-content" ref="chatContent">
+          <div
+            v-for="msg in selectedChatMessages"
+            class="chat-item"
+            :style="`color: ${msg.color};`"
+          >
+            <div class="icons">
+              <div v-for="icon in msg.icons" class="icon">
+                <i
+                  v-if="icon.type === 'class'"
+                  :class="icon.value"
+                  class="icon"
+                  :style="`color: ${icon.color};`"
+                ></i>
+                <img v-else :src="icon.value" class="icon" draggable="false" />
+              </div>
+            </div>
+            <div class="created-at">
+              {{new Date(msg.createdAt).toLocaleTimeString()}}
+            </div>
+            <div class="content">
+              <div
+                v-for="item in msg.content"
+                class="content-item"
+                :title="item.title"
+                :style="`${item.color ? `color: ${item.color};` : ''} ${item.size ? `font-size: ${item.size};` : ''} ${item.weight ? `font-weight: ${item.weight};` : ''}`"
+              >
+                {{item.value}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="auto-scroll-down" @click="autoScrollDown = !autoScrollDown">
+          <i v-if="autoScrollDown" class="ri-scroll-to-bottom-fill"></i>
+          <i v-else class="ri-scroll-to-bottom-line"></i>
+        </div>
+      </div>
+    </template>
+    <template component="settings-tab">
+      <div class="settings-tab">
+        <div class="section">
+          <div class="info">
+            <div class="title">Followed Chats</div>
+            <div class="description">
+              The name of the chats you want to follow. You can get correct name
+              from the url of the chat page.
+            </div>
+          </div>
+          <div class="controls">
+            <div class="chat-list">
+              <div class="list">
+                <div
+                  v-for="chat in followedChats"
+                  :key="chat"
+                  class="list-item"
+                >
+                  <div class="name" :title="`@${chat}`">@{{ chat }}</div>
+                  <div class="close" @click="removeChat(chat)">
+                    <i class="ri-close-large-fill icon"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="add-item">
+                <input type="text" placeholder="Chat Name" v-model="chatName" />
+                <button @click="addChat()">Add</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="info">
+            <div class="title">Session Id</div>
+            <div class="description">
+              Your TikTok session id is used to access your TikTok account. You
+              can find it in your browser's cookies. If you don't know what is
+              it just ignore it.
+            </div>
+          </div>
+          <div class="controls">
+            <input
+              type="password"
+              placeholder="Session Id"
+              v-model="sessionId"
+            />
+          </div>
+        </div>
+        <div class="section">
+          <div class="info">
+            <div class="title">History Size</div>
+            <div class="description">
+              The number of messages to keep in the chat history. Per chat.
+            </div>
+          </div>
+          <div class="controls">
+            <input
+              type="number"
+              placeholder="History Size"
+              v-model="historySize"
+            />
+          </div>
+        </div>
+        <div class="section">
+          <div class="info">
+            <div class="title">Reconnect to Chats</div>
+            <div class="description">
+              You can use this section after changing your settings.
+            </div>
+          </div>
+          <div class="controls">
+            <button @click="reconnect">Reconnect</button>
+          </div>
+        </div>
+      </div>
+    </template>
+    <div id="app">
+      <div class="title-bar">
+        <div class="title">
+          <div class="name">TikTok Chat Desktop</div>
+          <div class="version">v0.0.1</div>
+        </div>
+        <div class="controls">
+          <i
+            class="ri-chat-1-line icon"
+            @click="selectedTab = 'chats'"
+            :class="{'selected': selectedTab === 'chats'}"
+          ></i>
+          <i
+            class="ri-settings-3-line icon"
+            @click="selectedTab = 'settings'"
+            :class="{'selected': selectedTab === 'settings'}"
+          ></i>
+          <i class="ri-subtract-line icon" @click="minimize"></i>
+          <i class="ri-close-large-fill icon" @click="quit"></i>
+        </div>
+      </div>
+      <div class="content">
+        <chats-tab
+          v-if="selectedTab === 'chats'"
+          :messages="messages"
+        ></chats-tab>
+        <settings-tab v-if="selectedTab === 'settings'"></settings-tab>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.33/vue.global.min.js"></script>
+    <script src="./script.mjs" type="module"></script>
+  </body>
+</html>
