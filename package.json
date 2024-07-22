@@ -9,12 +9,12 @@
 	},
 	"devDependencies": {
 		"@types/node": "^20.14.11",
+		"electron": "^31.2.1",
 		"electron-builder": "^24.13.3",
-		"tsx": "^4.16.2",
-		"electron": "^31.2.1"
+		"tsx": "^4.16.2"
 	},
 	"name": "tiktok-chat-desktop",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"author": {
 		"name": "Kıraç Armağan Önal",
 		"email": "kiracarmaganonal@gmail.com"
@@ -27,13 +27,6 @@
 	"build": {
 		"appId": "rest.armagan.tiktokchatdesktop",
 		"productName": "TikTok Chat Desktop",
-		"files": [
-			"!*",
-			"src",
-			"static",
-			"package.json",
-			"LICENSE"
-		],
 		"icon": "static/icon.png",
 		"nsis": {
 			"oneClick": true,

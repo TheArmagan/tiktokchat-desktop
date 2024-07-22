@@ -1,3 +1,5 @@
+import { messageFormats } from "./i18n.mjs";
+
 function getFollowedChats() {
   return localStorage.getItem("followedChats") ? JSON.parse(localStorage.getItem("followedChats")) : [];
 }
@@ -9,6 +11,12 @@ function getHistorySize() {
 function getSessionId() {
   return localStorage.getItem("sessionId") || "";
 }
+
+function getLocale() {
+  return localStorage.getItem("locale") || "en";
+}
+
+const eventNames = ["Error", "Like", "Follow", "Chat", "Gift", "Subscribe", "Member"];
 
 const app = window.app = Vue.createApp({
   data() {
@@ -44,194 +52,9 @@ const app = window.app = Vue.createApp({
       });
     });
 
-    API.events.on("Like", ({ chat, data }) => {
-      this.addMessage(chat, {
-        createdAt: new Date().toISOString(),
-        icons: [
-          {
-            type: "class",
-            value: "ri-heart-line",
-            color: "#fb352b"
-          }
-        ],
-        content: [
-          {
-            color: "whitesmoke",
-            value: data.nickname || data.uniqueId,
-            title: `@${data.uniqueId}`
-          },
-          {
-            color: "#fb352b",
-            value: ` liked your stream `,
-          },
-          {
-            color: "whitesmoke",
-            value: `${data.likeCount.toLocaleString()}`
-          },
-          {
-            color: "#fb352b",
-            value: ` times! `,
-          },
-          {
-            color: "gray",
-            value: ` (Total: ${data.totalLikeCount.toLocaleString()}) `,
-          },
-        ]
-      });
-    });
-
-    API.events.on("Follow", ({ chat, data }) => {
-      this.addMessage(chat, {
-        createdAt: new Date().toISOString(),
-        icons: [
-          {
-            type: "class",
-            value: "ri-user-follow-line",
-            color: "#1999e6"
-          }
-        ],
-        content: [
-          {
-            color: "whitesmoke",
-            value: data.nickname || data.uniqueId,
-            title: `@${data.uniqueId}`
-          },
-          {
-            color: "#1999e6",
-            value: ` just started following!`
-          }
-        ]
-      });
-    });
-
-    API.events.on("Chat", ({ chat, data }) => {
-      this.addMessage(chat, {
-        createdAt: new Date().toISOString(),
-        content: `${data.nickname}: ${data.comment}`,
-        icons: [
-          {
-            type: "image",
-            value: data.profilePictureUrl
-          },
-          ...data.userBadges.filter(i => i.type === "image").map(i => ({ type: "image", value: i.url }))
-        ],
-        content: [
-          {
-            color: "#1999e6",
-            value: `${data.nickname || data.uniqueId}: `,
-            title: data.uniqueId
-          },
-          {
-            color: "whitesmoke",
-            value: data.comment
-          }
-        ]
-      });
-    });
-
-    API.events.on("Gift", ({ chat, data }) => {
-      this.addMessage(chat, {
-        createdAt: new Date().toISOString(),
-        icons: [
-          {
-            type: "class",
-            value: "ri-hearts-line",
-            color: "#ff73fa"
-          }
-        ],
-        content: data.giftType === 1 && !data.repeatEnd ? [
-          {
-            color: "whitesmoke",
-            value: data.nickname || data.uniqueId,
-            title: `@${data.uniqueId}`
-          },
-          {
-            color: "#ff73fa",
-            value: ` is sending gift `
-          },
-          {
-            color: "whitesmoke",
-            value: `${data.giftName}`,
-          },
-          {
-            color: "#ff73fa",
-            value: ` x`
-          },
-          {
-            color: "whitesmoke",
-            value: `${data.repeatCount.toLocaleString()}`
-          }
-        ] : [
-          {
-            color: "whitesmoke",
-            value: data.nickname || data.uniqueId,
-            title: `@${data.uniqueId}`
-          },
-          {
-            color: "#ff73fa",
-            value: ` sent gift `
-          },
-          {
-            color: "whitesmoke",
-            value: `${data.giftName}`,
-          },
-          {
-            color: "#ff73fa",
-            value: ` x`
-          },
-          {
-            color: "whitesmoke",
-            value: `${data.repeatCount.toLocaleString()}`
-          }
-        ]
-      });
-    });
-
-    API.events.on("Subscribe", ({ chat, data }) => {
-      this.addMessage(chat, {
-        createdAt: new Date().toISOString(),
-        icons: [
-          {
-            type: "class",
-            value: "ri-vip-crown-2-line",
-            color: "#fad400"
-          }
-        ],
-        content: [
-          {
-            color: "whitesmoke",
-            value: data.nickname || data.uniqueId,
-            title: `@${data.uniqueId}`
-          },
-          {
-            color: "#fad400",
-            value: ` subscribed!`
-          }
-        ]
-      });
-    });
-
-    API.events.on("Member", ({ chat, data }) => {
-      this.addMessage(chat, {
-        createdAt: new Date().toISOString(),
-        icons: [
-          {
-            type: "class",
-            value: "ri-arrow-down-double-line",
-            color: "gray"
-          }
-        ],
-        content: [
-          {
-            color: "whitesmoke",
-            value: data.nickname || data.uniqueId,
-            title: `@${data.uniqueId}`
-          },
-          {
-            color: "gray",
-            value: ` joined to stream!`
-          }
-        ]
+    eventNames.forEach((eventName) => {
+      API.events.on(eventName, ({ chat, data }) => {
+        this.addMessage(chat, messageFormats[getLocale()][eventName.toLowerCase()](data, chat));
       });
     });
   },
@@ -338,7 +161,8 @@ const componentScripts = {
         sessionId: getSessionId(),
         followedChats: getFollowedChats(),
         chatName: "",
-        historySize: getHistorySize()
+        historySize: getHistorySize(),
+        locale: getLocale()
       };
     },
     methods: {
@@ -348,6 +172,9 @@ const componentScripts = {
       },
       save() {
         localStorage.setItem("followedChats", JSON.stringify(this.followedChats));
+        localStorage.setItem("sessionId", this.sessionId);
+        localStorage.setItem("historySize", this.historySize);
+        localStorage.setItem("locale", this.locale);
       },
       addChat() {
         let chatName = this.chatName.replaceAll(/@/g, "").trim();
@@ -368,6 +195,9 @@ const componentScripts = {
       },
       historySize(value) {
         localStorage.setItem("historySize", value);
+      },
+      locale(value) {
+        localStorage.setItem("locale", value);
       }
     }
   }

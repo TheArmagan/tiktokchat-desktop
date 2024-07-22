@@ -126,6 +126,18 @@
         </div>
         <div class="section">
           <div class="info">
+            <div class="title">Locale</div>
+            <div class="description">The language of the chat messages.</div>
+          </div>
+          <div class="controls">
+            <select v-model="locale">
+              <option value="en">English</option>
+              <option value="tr">Türkçe</option>
+            </select>
+          </div>
+        </div>
+        <div class="section">
+          <div class="info">
             <div class="title">History Size</div>
             <div class="description">
               The number of messages to keep in the chat history. Per chat.
@@ -156,7 +168,7 @@
       <div class="title-bar">
         <div class="title">
           <div class="name">TikTok Chat Desktop</div>
-          <div class="version">v0.0.1</div>
+          <div class="version">v0.0.2</div>
         </div>
         <div class="controls">
           <i
