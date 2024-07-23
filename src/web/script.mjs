@@ -1,20 +1,5 @@
+import { getFollowedChats, getVisibleEvents, getHistorySize, getSessionId, getLocale } from "./data.mjs";
 import { messageFormats } from "./i18n.mjs";
-
-function getFollowedChats() {
-  return localStorage.getItem("followedChats") ? JSON.parse(localStorage.getItem("followedChats")) : [];
-}
-
-function getHistorySize() {
-  return parseInt(localStorage.getItem("historySize") || 500);
-}
-
-function getSessionId() {
-  return localStorage.getItem("sessionId") || "";
-}
-
-function getLocale() {
-  return localStorage.getItem("locale") || "en";
-}
 
 const eventNames = ["Error", "Like", "Follow", "Chat", "Gift", "Subscribe", "Member"];
 
@@ -29,31 +14,9 @@ const app = window.app = Vue.createApp({
     window.internalApp = this;
     API.controls.connect(getFollowedChats(), getSessionId());
 
-    API.events.on("Error", ({ chat, data }) => {
-      this.addMessage(chat, {
-        createdAt: new Date().toISOString(),
-        icons: [
-          {
-            type: "class",
-            value: "ri-error-warning-line",
-            color: "#fb352b"
-          }
-        ],
-        content: [
-          {
-            color: "whitesmoke",
-            value: `${data.info}: `
-          },
-          {
-            color: "#fb352b",
-            value: `${data.exception}`
-          }
-        ]
-      });
-    });
-
     eventNames.forEach((eventName) => {
       API.events.on(eventName, ({ chat, data }) => {
+        if (!getVisibleEvents().includes(eventName.toLowerCase())) return;
         this.addMessage(chat, messageFormats[getLocale()][eventName.toLowerCase()](data, chat));
       });
     });
@@ -113,7 +76,6 @@ const componentScripts = {
       window.removeEventListener("resize", this.checkWidth);
     },
     methods: {
-
       checkWidth() {
         this.showEndFade = this.$refs.chatTabsWrapper.scrollWidth > window.innerWidth;
       },
@@ -162,7 +124,9 @@ const componentScripts = {
         followedChats: getFollowedChats(),
         chatName: "",
         historySize: getHistorySize(),
-        locale: getLocale()
+        locale: getLocale(),
+        visibleEvents: getVisibleEvents(),
+        eventName: "like"
       };
     },
     methods: {
@@ -170,17 +134,25 @@ const componentScripts = {
         this.followedChats = this.followedChats.filter(i => i !== chat);
         this.save();
       },
+      removeEvent(event) {
+        this.visibleEvents = this.visibleEvents.filter(i => i !== event);
+        this.save();
+      },
       save() {
         localStorage.setItem("followedChats", JSON.stringify(this.followedChats));
-        localStorage.setItem("sessionId", this.sessionId);
-        localStorage.setItem("historySize", this.historySize);
-        localStorage.setItem("locale", this.locale);
+        localStorage.setItem("visibleEvents", JSON.stringify(this.visibleEvents));
       },
       addChat() {
         let chatName = this.chatName.replaceAll(/@/g, "").trim();
         if (chatName && !this.followedChats.includes(chatName)) {
           this.followedChats.push(chatName);
           this.chatName = "";
+          this.save();
+        }
+      },
+      addEvent() {
+        if (!this.visibleEvents.includes(this.eventName)) {
+          this.visibleEvents.push(this.eventName);
           this.save();
         }
       },

@@ -87,7 +87,7 @@
             </div>
           </div>
           <div class="controls">
-            <div class="chat-list">
+            <div class="list-wrapper">
               <div class="list">
                 <div
                   v-for="chat in followedChats"
@@ -103,6 +103,39 @@
               <div class="add-item">
                 <input type="text" placeholder="Chat Name" v-model="chatName" />
                 <button @click="addChat()">Add</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="info">
+            <div class="title">Visible Events</div>
+            <div class="description">
+              Events that will be shown in the chat.
+            </div>
+          </div>
+          <div class="controls">
+            <div class="list-wrapper">
+              <div class="list">
+                <div v-for="evt in visibleEvents" :key="evt" class="list-item">
+                  <div class="name">
+                    {{ evt.slice(0, 1).toUpperCase()+evt.slice(1) }}
+                  </div>
+                  <div class="close" @click="removeEvent(evt)">
+                    <i class="ri-close-large-fill icon"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="add-item">
+                <select v-model="eventName">
+                  <option value="like">Like</option>
+                  <option value="follow">Follow</option>
+                  <option value="chat" selected>Chat</option>
+                  <option value="gift">Gift</option>
+                  <option value="subscribe">Subscribe</option>
+                  <option value="member">Member</option>
+                </select>
+                <button @click="addEvent()">Add</button>
               </div>
             </div>
           </div>

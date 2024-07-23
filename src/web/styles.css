@@ -282,12 +282,12 @@ body,
   gap: 4px;
   align-items: center;
 }
-#app > .content > .settings-tab .section > .controls > .chat-list {
+#app > .content > .settings-tab .section > .controls > .list-wrapper {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
-#app > .content > .settings-tab .section > .controls > .chat-list > .list {
+#app > .content > .settings-tab .section > .controls > .list-wrapper > .list {
   display: flex;
   flex-direction: column;
   background-color: #131313;
@@ -299,7 +299,7 @@ body,
   gap: 4px;
   overflow-y: auto;
 }
-#app > .content > .settings-tab .section > .controls > .chat-list > .list .list-item {
+#app > .content > .settings-tab .section > .controls > .list-wrapper > .list .list-item {
   display: flex;
   gap: 4px;
   align-items: center;
@@ -309,10 +309,10 @@ body,
   justify-content: space-between;
   background-color: rgba(255, 255, 255, 0.01);
 }
-#app > .content > .settings-tab .section > .controls > .chat-list > .list .list-item:hover, #app > .content > .settings-tab .section > .controls > .chat-list > .list .list-item.selected {
+#app > .content > .settings-tab .section > .controls > .list-wrapper > .list .list-item:hover, #app > .content > .settings-tab .section > .controls > .list-wrapper > .list .list-item.selected {
   background-color: rgba(255, 255, 255, 0.05);
 }
-#app > .content > .settings-tab .section > .controls > .chat-list > .list .list-item > .name {
+#app > .content > .settings-tab .section > .controls > .list-wrapper > .list .list-item > .name {
   max-width: 148px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -322,15 +322,15 @@ body,
   font-size: 14px;
   color: whitesmoke;
 }
-#app > .content > .settings-tab .section > .controls > .chat-list > .list .list-item > .close {
+#app > .content > .settings-tab .section > .controls > .list-wrapper > .list .list-item > .close {
   font-size: 12px;
   color: rgba(245, 245, 245, 0.5);
   cursor: pointer;
 }
-#app > .content > .settings-tab .section > .controls > .chat-list > .list .list-item > .close:hover {
+#app > .content > .settings-tab .section > .controls > .list-wrapper > .list .list-item > .close:hover {
   color: whitesmoke;
 }
-#app > .content > .settings-tab .section > .controls > .chat-list > .add-item {
+#app > .content > .settings-tab .section > .controls > .list-wrapper > .add-item {
   display: flex;
   gap: 4px;
   align-items: center;

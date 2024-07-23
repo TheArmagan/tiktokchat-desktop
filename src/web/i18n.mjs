@@ -81,8 +81,7 @@ export const messageFormats = {
         {
           type: "image",
           value: data.profilePictureUrl
-        },
-        ...data.userBadges.filter(i => i.type === "image").map(i => ({ type: "image", value: i.url }))
+        }
       ],
       content: [
         {
@@ -276,8 +275,7 @@ export const messageFormats = {
         {
           type: "image",
           value: data.profilePictureUrl
-        },
-        ...data.userBadges.filter(i => i.type === "image").map(i => ({ type: "image", value: i.url }))
+        }
       ],
       content: [
         {
